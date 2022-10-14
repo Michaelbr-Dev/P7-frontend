@@ -29,13 +29,17 @@
       <label for="Password-confirmation"></label>
       <input
         type="password-confirmation"
-        placeholder="Confirmation Mot de passe"
+        placeholder="Confirmation mot de passe"
         required="required"
       /><br />
-      <input type="button" value="Connexion" /><br />
+      <input type="button" value="Inscription" /><br />
       <div class="link">
         <span class="register">Vous avez un compte ? </span>
-        <button type="button" @click="this.$emit('redirect-to-login')">
+        <button
+          type="button"
+          class="btn-link"
+          @click="this.$emit('redirect-to-login')"
+        >
           Connectez-vous !
         </button>
       </div>
@@ -56,8 +60,8 @@ export default {
 form {
   font-family: 'Roboto', sans-serif;
   background: rgba(255, 255, 255, 0.2);
-  padding: 3rem;
-  height: 450px;
+  padding: 3rem 1.5rem;
+  height: 540px;
   border-radius: 20px;
   border-left: 1px solid rgba(255, 255, 255, 0.3);
   border-top: 1px solid rgba(255, 255, 255, 0.3);
@@ -104,7 +108,7 @@ input {
   border: none;
   border-left: 1px solid rgba(255, 255, 255, 0.3);
   border-top: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 1rem;
+  padding: 0.6rem;
   width: 100%;
   border-radius: 50px;
   backdrop-filter: blur(5px);
@@ -115,7 +119,7 @@ input {
   font-weight: 500;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
   transition: all 0.3s;
-  margin-bottom: 2em;
+  margin-bottom: 1.5em;
 }
 
 input:hover,
@@ -128,7 +132,7 @@ input[type='password']:focus {
 input[type='button'] {
   margin-top: 10px;
   margin-bottom: 15px;
-  width: 150px;
+  width: 120px;
 
   font-size: 1rem;
   cursor: pointer;
@@ -139,8 +143,20 @@ input[type='button'] {
 }
 
 .link {
-  margin-top: 40px;
+  margin-top: 20px;
+  widows: 100%;
 }
+
+.btn-link {
+  font-family: 'Roboto', 'sans-serif';
+  font-size: 1.1rem;
+  font-weight: 700;
+  border: none;
+  background: none;
+  display: inline-block;
+  cursor: pointer;
+}
+
 .link a {
   font-family: 'Roboto', 'sans-serif';
   font-size: 1.1rem;
