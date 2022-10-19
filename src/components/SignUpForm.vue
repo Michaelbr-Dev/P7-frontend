@@ -1,38 +1,50 @@
 <template>
   <div class="container">
-    <form>
+    <form @submit.prevent="userSignUp()">
       <p>Bienvenue</p>
       <label for="first-name"></label>
       <input
         type="text"
-        name="first-name"
-        value=""
+        name="firstName"
         placeholder="Prénom"
+        v-model="firstName"
         required="required"
-      /><br />
+      /><br /><span v-if="!isFirstNameValid">Prénom invalide !</span>
       <label for="last-name"></label>
       <input
         type="text"
-        name="last-name"
-        value=""
+        name="lastName"
         placeholder="Nom"
+        v-model="lastName"
         required="required"
-      /><br />
+      /><br /><span v-if="!isLastNameValid">Nom invalide !</span>
       <label for="Email"></label>
-      <input type="email" placeholder="Email" required="required" /><br />
+      <input type="email" placeholder="Email" v-model="email" /><br /><span
+        v-if="!isEmailValid"
+        >Adresse email invalide !</span
+      >
       <label for="Password"></label>
       <input
         type="password"
+        name="password"
         placeholder="Mot de passe"
+        v-model="password"
         required="required"
-      /><br />
+      /><br /><span v-if="!isPasswordValid">Mot de passe invalide !</span>
       <label for="Password-confirmation"></label>
       <input
-        type="password-confirmation"
+        type="password"
+        name="passwordConfirm"
         placeholder="Confirmation mot de passe"
+        v-model="passwordConfirm"
         required="required"
-      /><br />
-      <input type="button" value="Inscription" /><br />
+      /><br /><span v-if="!isPasswordConfirmValid"
+        >Mot de passe invalide !</span
+      >
+      <span v-if="isPasswordConfirmValid && !isMatchPasswordValid"
+        >Les mots de passe ne correspondent pas !</span
+      >
+      <button type="submit">Inscription</button><br />
       <div class="link">
         <span class="register">Vous avez un compte ? </span>
         <button
@@ -47,8 +59,92 @@
   </div>
 </template>
 <script>
+import validator from 'validator';
+
 export default {
   name: 'SignUpForm',
+  data() {
+    return {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      passwordConfirm: '',
+    };
+  },
+  methods: {
+    userSignUp() {
+      if (this.isFormValid) this.signUpRequest();
+    },
+    async signUpRequest() {
+      const reqObject = {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          firstName: this.firstName,
+          lastName: this.lastName,
+          email: this.email,
+          password: this.password,
+        }),
+      };
+      try {
+        const res = await fetch(
+          `${process.env.VUE_APP_API_BASE_URL}/auth/signup`,
+          reqObject,
+        );
+        const data = await res.json();
+        if (!res.ok) {
+          throw Error(data.message);
+        }
+        this.$emit('redirect-to-login');
+      } catch (error) {
+        // eslint-disable-next-line no-alert
+        alert(error.message);
+      }
+    },
+  },
+  computed: {
+    isFirstNameValid() {
+      return this.firstName.length > 0;
+    },
+    isLastNameValid() {
+      return this.lastName.length > 0;
+    },
+    isEmailValid() {
+      return this.email.length > 0;
+    },
+    isPasswordValid() {
+      return validator.isStrongPassword(this.password, {
+        minLength: 8,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+      });
+    },
+    isPasswordConfirmValid() {
+      return validator.isStrongPassword(this.password, {
+        minLength: 8,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+      });
+    },
+    isMatchPasswordValid() {
+      return this.password === this.passwordConfirm;
+    },
+    isFormValid() {
+      return (
+        this.isFirstNameValid &&
+        this.isLastNameValid &&
+        this.isEmailValid &&
+        this.isPasswordValid &&
+        this.isPasswordConfirmValid &&
+        this.isMatchPasswordValid
+      );
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -79,7 +175,7 @@ form {
 
 p {
   color: rgb(0, 0, 0);
-  font-family: 'Roboto', 'sans-serif';
+  font-family: 'Lato', sans-serif;
   font-weight: 500;
   opacity: 0.7;
   font-size: 1.4rem;
@@ -129,11 +225,26 @@ input[type='password']:focus {
   box-shadow: 4px 4px 60px 8px rgba(0, 0, 0, 0.2);
 }
 
-input[type='button'] {
+button[type='submit'] {
+  font-family: 'Roboto', sans-serif;
+  background: transparent;
+  border: none;
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.6rem;
+  width: 100%;
+  border-radius: 50px;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  -moz-backdrop-filter: blur(5px);
+  box-shadow: 4px 4px 60px rgba(0, 0, 0, 0.2);
+  color: rgb(0, 0, 0);
+  font-weight: 500;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s;
   margin-top: 10px;
   margin-bottom: 15px;
   width: 120px;
-
   font-size: 1rem;
   cursor: pointer;
 }
@@ -148,7 +259,7 @@ input[type='button'] {
 }
 
 .btn-link {
-  font-family: 'Roboto', 'sans-serif';
+  font-family: 'Lato', sans-serif;
   font-size: 1.1rem;
   font-weight: 700;
   border: none;
@@ -158,13 +269,13 @@ input[type='button'] {
 }
 
 .link a {
-  font-family: 'Roboto', 'sans-serif';
+  font-family: 'Lato', sans-serif;
   font-size: 1.1rem;
   font-weight: 700;
 }
 
 .register {
-  font-family: 'Roboto', 'sans-serif';
+  font-family: 'Lato', sans-serif;
   font-size: 1.1rem;
   font-weight: 700;
 }
