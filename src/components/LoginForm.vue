@@ -1,12 +1,24 @@
 <template>
   <div class="container">
-    <form>
+    <form @submit.prevent="userLogin()">
       <p>Bienvenue</p>
       <label for="Email"></label>
-      <input type="email" placeholder="Email" /><br />
+      <input
+        type="email"
+        placeholder="Email"
+        name="email"
+        required="required"
+        v-model="email"
+      /><br />
       <label for="Password"></label>
-      <input type="password" placeholder="Mot de passe" /><br />
-      <input type="button" value="Connexion" /><br />
+      <input
+        type="password"
+        placeholder="Mot de passe"
+        name="password"
+        required="required"
+        v-model="password"
+      /><br />
+      <button type="submit">Connexion</button><br />
       <a href="#">Mot de passe oublié</a>
       <div class="link">
         <span class="register">Pas de compte ? </span>
@@ -24,6 +36,53 @@
 <script>
 export default {
   name: 'LoginForm',
+  data() {
+    return {
+      email: '',
+      password: '',
+      error: false,
+      errorMsg: '',
+    };
+  },
+  methods: {
+    userLogin() {
+      if (this.email === '' || this.password === '') {
+        this.error = true;
+        this.errorMsg = 'Merci de renseigner tous les champs du formulaire.';
+      } else {
+        this.error = false;
+        this.errorMsg = '';
+        this.loginRequest();
+      }
+    },
+    async loginRequest() {
+      const reqObject = {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          email: this.email,
+          password: this.password,
+        }),
+      };
+      try {
+        const res = await fetch(
+          `${process.env.VUE_APP_API_BASE_URL}/auth/login`,
+          reqObject,
+        );
+        const data = await res.json();
+        if (!res.ok) {
+          throw Error(data.message);
+        }
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userId', data.userId);
+        localStorage.setItem('isAdmin', data.isAdmin);
+        this.$router.push({ name: 'Home' });
+      } catch (error) {
+        // eslint-disable-next-line no-alert
+        alert(error.message);
+      }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -54,7 +113,7 @@ form {
 
 p {
   color: rgb(0, 0, 0);
-  font-family: 'Roboto', 'sans-serif';
+  font-family: 'Lato', sans-serif;
   font-weight: 500;
   opacity: 0.7;
   font-size: 1.4rem;
@@ -104,11 +163,26 @@ input[type='password']:focus {
   box-shadow: 4px 4px 60px 8px rgba(0, 0, 0, 0.2);
 }
 
-input[type='button'] {
+button[type='submit'] {
+  font-family: 'Roboto', sans-serif;
+  background: transparent;
+  border: none;
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.6rem;
+  width: 100%;
+  border-radius: 50px;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  -moz-backdrop-filter: blur(5px);
+  box-shadow: 4px 4px 60px rgba(0, 0, 0, 0.2);
+  color: rgb(0, 0, 0);
+  font-weight: 500;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s;
   margin-top: 10px;
   margin-bottom: 15px;
   width: 120px;
-
   font-size: 1rem;
   cursor: pointer;
 }
@@ -123,7 +197,7 @@ input[type='button'] {
 }
 
 .btn-link {
-  font-family: 'Roboto', 'sans-serif';
+  font-family: 'Lato', sans-serif;
   font-size: 1.1rem;
   font-weight: 700;
   border: none;
@@ -132,13 +206,13 @@ input[type='button'] {
   cursor: pointer;
 }
 .link a {
-  font-family: 'Roboto', 'sans-serif';
+  font-family: 'Lato', sans-serif;
   font-size: 1.1rem;
   font-weight: 700;
 }
 
 .register {
-  font-family: 'Roboto', 'sans-serif';
+  font-family: 'Lato', sans-serif;
   font-size: 1.1rem;
   font-weight: 700;
 }
