@@ -17,7 +17,8 @@
         <ul>
           <li><i class="fas fa-user"></i><a href="#">Mon Profile</a></li>
           <li>
-            <i class="fas fa-sign-out-alt"></i><a href="#">Déconnexion</a>
+            <i class="fas fa-sign-out-alt"></i
+            ><a href="#" @click="logout">Déconnexion</a>
           </li>
         </ul>
       </div>
@@ -37,13 +38,20 @@ export default {
     menuToggle() {
       this.isMenuOpen = !this.isMenuOpen;
     },
+
+    logout() {
+      localStorage.removeItem('userId');
+      localStorage.removeItem('isAdmin');
+      localStorage.removeItem('token');
+      this.$router.push({ name: 'Login' });
+    },
   },
 };
 </script>
 
 <style lang="scss">
 .header {
-  padding: 0.2rem;
+  padding: 5px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -55,22 +63,20 @@ export default {
 }
 
 .action {
-  width: 52px;
-  height: 52px;
+  width: 65px;
+  height: 65px;
+  margin-right: 15px;
 }
 
 .action .profile {
   position: relative;
-  width: 80px;
-  height: 80px;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
   cursor: pointer;
   display: block;
 }
 .action .profile img {
-  position: absolute;
-  top: 0;
-  right: 1.5rem;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -92,6 +98,7 @@ export default {
   top: 80px;
   visibility: visible;
   opacity: 1;
+  margin-right: 15px;
 }
 .action .menu::before {
   content: '';
