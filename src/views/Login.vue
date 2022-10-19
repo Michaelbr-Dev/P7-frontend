@@ -50,21 +50,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .area {
-  background-image: linear-gradient(
-    to right top,
-    #fd2d01,
-    #ff553b,
-    #ff7664,
-    #ff9489,
-    #ffb1ac,
-    #ffbebb,
-    #ffcac9,
-    #ffd7d7,
-    #ffd7d7,
-    #ffd7d7,
-    #ffd7d7,
-    #ffd7d7
-  );
+  background-color: #ffd7d7;
   width: 100%;
   height: 100vh;
 }
