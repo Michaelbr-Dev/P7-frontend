@@ -18,9 +18,13 @@
         <div class="title__header__icons__edit">
           <i class="fa-solid fa-pen-to-square"></i>
         </div>
-        <div class="title__header__icons__delete">
+        <button
+          type="button"
+          class="title__header__icons__delete"
+          @click="deletePost"
+        >
           <i class="fa-solid fa-trash"></i>
-        </div>
+        </button>
       </div>
     </div>
     <div class="post__content">
@@ -63,6 +67,28 @@ export default {
       const date = new Date(postDate);
       const options = { hour: 'numeric', minute: 'numeric' };
       return date.toLocaleString('fr-FR', options);
+    },
+    async deletePost() {
+      const reqObject = {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      };
+      try {
+        const res = await fetch(
+          // eslint-disable-next-line no-underscore-dangle
+          `${process.env.VUE_APP_API_BASE_URL}/posts/${this.post._id}`,
+          reqObject,
+        );
+        const data = await res.json();
+        if (!res.ok) {
+          throw Error(data.message);
+        }
+        this.$emit('post-deleted');
+      } catch (error) {
+        alert(error.message);
+      }
     },
   },
 };

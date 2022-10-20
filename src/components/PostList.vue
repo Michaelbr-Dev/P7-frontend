@@ -1,5 +1,10 @@
 <template>
-  <Post v-for="post in sortedPosts" :key="post._id" :post="post" />
+  <Post
+    v-for="post in sortedPosts"
+    :key="post._id"
+    :post="post"
+    @post-deleted="$emit('post-deleted')"
+  />
 </template>
 <script>
 import Post from '@/components/Post.vue';

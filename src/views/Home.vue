@@ -2,7 +2,7 @@
   <div class="container">
     <HeaderSite />
     <CreatePost @post-created="getAllPosts()" />
-    <PostList :posts="posts" />
+    <PostList :posts="posts" @post-deleted="getAllPosts()" />
   </div>
 </template>
 <script>
