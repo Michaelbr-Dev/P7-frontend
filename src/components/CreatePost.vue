@@ -19,7 +19,6 @@
             alt="New post image Preview"
             class="post__form__content__attachement__img"
           />
-          <span>{{ this.postImage.name }}</span>
           <button type="button" @click="removeImagePreview()">
             <i class="fa-regular fa-circle-xmark"></i>
           </button>
@@ -97,7 +96,6 @@ export default {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
-          // 'Content-Type': 'multipart/form-data',
         },
         body: formData,
       };
