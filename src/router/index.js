@@ -1,11 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '@/views/Home.vue';
 import Login from '@/views/Login.vue';
+import Profile from '@/views/Profile.vue';
+import store from '@/store/index';
 
 // eslint-disable-next-line consistent-return
 const auth = () => {
-  const token = localStorage.getItem('token');
-  if (token === null) {
+  if (store.state.token === null) {
     return { name: 'Login' };
   }
 };
@@ -23,6 +24,13 @@ const routes = [
     name: 'Login',
     component: Login,
     meta: { title: 'Groupomania - Login' },
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: Profile,
+    meta: { title: 'Groupomania - Profile' },
+    beforeEnter: [auth],
   },
 ];
 
