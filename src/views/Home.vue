@@ -2,7 +2,12 @@
   <div class="container">
     <HeaderSite />
     <CreatePost @post-created="getAllPosts()" />
-    <PostList :posts="posts" @post-deleted="getAllPosts()" />
+    <PostList
+      :posts="posts"
+      @post-deleted="getAllPosts()"
+      @post-updated="getAllPosts()"
+      @toggle-like="getAllPosts()"
+    />
   </div>
 </template>
 <script>
@@ -25,7 +30,7 @@ export default {
     async getAllPosts() {
       try {
         const res = await fetch(`${process.env.VUE_APP_API_BASE_URL}/posts/`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+          headers: { Authorization: `Bearer ${this.$store.state.token}` },
         });
         if (!res.ok) {
           throw Error(res.message);
@@ -42,9 +47,17 @@ export default {
 </script>
 <style lang="scss" scoped>
 .container {
-  background-color: #ffd7d7;
-  width: 100%;
+  width: 95%;
+  max-width: 760px;
+  margin: 0 auto;
   min-height: 100vh;
   padding-bottom: 32px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: 100%;
+    max-width: 760px;
+  }
 }
 </style>

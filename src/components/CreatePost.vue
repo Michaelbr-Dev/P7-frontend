@@ -1,7 +1,10 @@
 <template>
   <div class="post__form">
     <div class="post__form__user__img">
-      <img src="https://via.placeholder.com/48" alt="Prénom Nom" />
+      <img
+        :src="`${apiBaseImgUrl}${$store.state.authenticatedUser?.avatar}`"
+        :alt="`${$store.state.authenticatedUser?.firstName} ${$store.state.authenticatedUser?.lastName}`"
+      />
     </div>
     <div class="post__form__content">
       <form @submit.prevent="newPostRequest()">
@@ -19,7 +22,11 @@
             alt="New post image Preview"
             class="post__form__content__attachement__img"
           />
-          <button type="button" @click="removeImagePreview()">
+          <button
+            type="button"
+            @click="removeImagePreview()"
+            class="delete-btn"
+          >
             <i class="fa-regular fa-circle-xmark"></i>
           </button>
         </div>
@@ -40,7 +47,7 @@
             />
           </div>
           <div class="post__form__footer__submit">
-            <button type="submit">
+            <button type="submit" v-if="sendButton" class="submit-btn">
               Envoyer <i class="fa-sharp fa-solid fa-paper-plane"></i>
             </button>
           </div>
@@ -57,6 +64,10 @@ export default {
       if (this.postImage === null) return true;
       return this.mimeTypesAuthorized.includes(this.postImage.type);
     },
+    sendButton() {
+      if (this.textarea || this.postImage) return true;
+      return false;
+    },
   },
   data() {
     return {
@@ -69,6 +80,7 @@ export default {
         'image/png',
         'image/gif',
       ],
+      apiBaseImgUrl: process.env.VUE_APP_API_BASE_IMG_URL,
     };
   },
   methods: {
@@ -95,7 +107,7 @@ export default {
       const reqObject = {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${this.$store.state.token}`,
         },
         body: formData,
       };
@@ -160,9 +172,10 @@ export default {
   }
 
   &__user {
-    &__img {
+    &__img img {
+      width: 48px;
+      height: 48px;
       margin: 8px;
-      padding: 8px;
     }
   }
 
@@ -176,5 +189,19 @@ export default {
       display: none;
     }
   }
+}
+
+.submit-btn {
+  border: 0;
+  font-family: 'Lato', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fd2d01;
+}
+
+.delete-btn {
+  border: 0;
+  font-size: 1.5rem;
+  color: #fd2d01;
 }
 </style>

@@ -18,8 +18,7 @@
         required="required"
         v-model="password"
       /><br />
-      <button type="submit">Connexion</button><br />
-      <a href="#">Mot de passe oublié</a>
+      <button type="submit" class="btn-cnx">Connexion</button><br />
       <div class="link">
         <span class="register">Pas de compte ? </span>
         <button
@@ -34,6 +33,8 @@
   </div>
 </template>
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'LoginForm',
   data() {
@@ -45,6 +46,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['setToken']),
     userLogin() {
       if (this.email === '' || this.password === '') {
         this.error = true;
@@ -73,9 +75,10 @@ export default {
         if (!res.ok) {
           throw Error(data.message);
         }
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('userId', data.userId);
-        localStorage.setItem('isAdmin', data.isAdmin);
+        this.$store.dispatch('setToken', { token: data.token });
+        this.$store.dispatch('setUserId', { userId: data.userId });
+        this.$store.dispatch('setIsAdmin', { isAdmin: data.isAdmin });
+        this.$store.dispatch('refreshUserData');
         this.$router.push({ name: 'Home' });
       } catch (error) {
         // eslint-disable-next-line no-alert
@@ -92,7 +95,7 @@ export default {
 }
 
 form {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Lato', sans-serif;
   background: rgba(255, 255, 255, 0.2);
   padding: 3rem 1.5rem;
   height: 400px;
@@ -105,7 +108,6 @@ form {
   box-shadow: 20px 20px 40px -6px rgba(0, 0, 0, 0.2);
   text-align: center;
   position: relative;
-  width: 50%;
   max-width: 400px;
   margin: auto;
   z-index: 1;
@@ -137,7 +139,7 @@ a:active {
 }
 
 input {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Lato', sans-serif;
   background: transparent;
   border: none;
   border-left: 1px solid rgba(255, 255, 255, 0.3);
@@ -164,9 +166,9 @@ input[type='password']:focus {
 }
 
 button[type='submit'] {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Lato', sans-serif;
   background: transparent;
-  border: none;
+  border: 1px solid #ffbcbc;
   border-left: 1px solid rgba(255, 255, 255, 0.3);
   border-top: 1px solid rgba(255, 255, 255, 0.3);
   padding: 0.6rem;
@@ -176,7 +178,7 @@ button[type='submit'] {
   -webkit-backdrop-filter: blur(5px);
   -moz-backdrop-filter: blur(5px);
   box-shadow: 4px 4px 60px rgba(0, 0, 0, 0.2);
-  color: rgb(0, 0, 0);
+  color: #fd2d01;
   font-weight: 500;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
   transition: all 0.3s;
@@ -204,6 +206,11 @@ button[type='submit'] {
   background: none;
   display: inline-block;
   cursor: pointer;
+  color: #fd2d01;
+}
+
+.btn-cnx {
+  background-color: #ffd7d7;
 }
 .link a {
   font-family: 'Lato', sans-serif;
@@ -215,5 +222,12 @@ button[type='submit'] {
   font-family: 'Lato', sans-serif;
   font-size: 1.1rem;
   font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  form {
+    width: 90%;
+    max-width: 400px;
+  }
 }
 </style>

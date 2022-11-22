@@ -9,7 +9,9 @@
         placeholder="Prénom"
         v-model="firstName"
         required="required"
-      /><br /><span v-if="!isFirstNameValid">Prénom invalide !</span>
+      /><br /><span v-if="!isFirstNameValid && this.firstName !== ''"
+        >Prénom invalide !</span
+      >
       <label for="last-name"></label>
       <input
         type="text"
@@ -17,10 +19,12 @@
         placeholder="Nom"
         v-model="lastName"
         required="required"
-      /><br /><span v-if="!isLastNameValid">Nom invalide !</span>
+      /><br /><span v-if="!isLastNameValid && this.lastName !== ''"
+        >Nom invalide !</span
+      >
       <label for="Email"></label>
       <input type="email" placeholder="Email" v-model="email" /><br /><span
-        v-if="!isEmailValid"
+        v-if="!isEmailValid && this.email !== ''"
         >Adresse email invalide !</span
       >
       <label for="Password"></label>
@@ -30,7 +34,9 @@
         placeholder="Mot de passe"
         v-model="password"
         required="required"
-      /><br /><span v-if="!isPasswordValid">Mot de passe invalide !</span>
+      /><br /><span v-if="!isPasswordValid && this.password !== ''"
+        >Mot de passe invalide !</span
+      >
       <label for="Password-confirmation"></label>
       <input
         type="password"
@@ -38,7 +44,8 @@
         placeholder="Confirmation mot de passe"
         v-model="passwordConfirm"
         required="required"
-      /><br /><span v-if="!isPasswordConfirmValid"
+      /><br /><span
+        v-if="!isPasswordConfirmValid && this.passwordConfirm !== ''"
         >Mot de passe invalide !</span
       >
       <span v-if="isPasswordConfirmValid && !isMatchPasswordValid"
@@ -154,7 +161,7 @@ export default {
 }
 
 form {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Lato', sans-serif;
   background: rgba(255, 255, 255, 0.2);
   padding: 3rem 1.5rem;
   height: 540px;
@@ -199,7 +206,7 @@ a:active {
 }
 
 input {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Lato', sans-serif;
   background: transparent;
   border: none;
   border-left: 1px solid rgba(255, 255, 255, 0.3);
@@ -226,9 +233,9 @@ input[type='password']:focus {
 }
 
 button[type='submit'] {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Lato', sans-serif;
   background: transparent;
-  border: none;
+  border: 1px solid #ffbcbc;
   border-left: 1px solid rgba(255, 255, 255, 0.3);
   border-top: 1px solid rgba(255, 255, 255, 0.3);
   padding: 0.6rem;
@@ -238,7 +245,7 @@ button[type='submit'] {
   -webkit-backdrop-filter: blur(5px);
   -moz-backdrop-filter: blur(5px);
   box-shadow: 4px 4px 60px rgba(0, 0, 0, 0.2);
-  color: rgb(0, 0, 0);
+  color: #fd2d01;
   font-weight: 500;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
   transition: all 0.3s;
@@ -266,6 +273,7 @@ button[type='submit'] {
   background: none;
   display: inline-block;
   cursor: pointer;
+  color: #fd2d01;
 }
 
 .link a {
@@ -278,5 +286,12 @@ button[type='submit'] {
   font-family: 'Lato', sans-serif;
   font-size: 1.1rem;
   font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  form {
+    width: 90%;
+    max-width: 400px;
+  }
 }
 </style>

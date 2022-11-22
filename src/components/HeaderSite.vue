@@ -1,21 +1,34 @@
 <template>
   <div class="header">
-    <div>
+    <div class="logo">
       <img
-        src="../assets/icon-left-font-monochrome-black.png"
+        src="../assets/logo.png"
         alt="Logo Groupomania"
         class="header-logo"
       />
+      <h1>Groupomania</h1>
     </div>
     <nav></nav>
     <div class="action">
       <a href="#" class="profile" @click.prevent.stop="menuToggle">
-        <img src="https://via.placeholder.com/52" alt="Image utilisateur" />
+        <img
+          :src="`${apiBaseImgUrl}${$store.state.authenticatedUser?.avatar}`"
+          :alt="`${$store.state.authenticatedUser?.firstName} ${$store.state.authenticatedUser?.lastName}`"
+        />
       </a>
       <div class="menu" :class="{ active: isMenuOpen }">
-        <p>Prenom Nom</p>
+        <p>
+          {{ $store.state.authenticatedUser?.firstName }}
+          {{ $store.state.authenticatedUser?.lastName }}
+        </p>
         <ul>
-          <li><i class="fas fa-user"></i><a href="#">Mon Profile</a></li>
+          <li>
+            <i class="fas fa-home"></i><router-link to="/">Accueil</router-link>
+          </li>
+          <li>
+            <i class="fas fa-user"></i
+            ><router-link to="/profile">Mon profil</router-link>
+          </li>
           <li>
             <i class="fas fa-sign-out-alt"></i
             ><a href="#" @click="logout">Déconnexion</a>
@@ -32,6 +45,7 @@ export default {
   data: () => {
     return {
       isMenuOpen: false,
+      apiBaseImgUrl: process.env.VUE_APP_API_BASE_IMG_URL,
     };
   },
   methods: {
@@ -40,21 +54,38 @@ export default {
     },
 
     logout() {
-      localStorage.removeItem('userId');
-      localStorage.removeItem('isAdmin');
-      localStorage.removeItem('token');
+      this.$store.dispatch('setToken', { token: null });
+      this.$store.dispatch('setUserId', { userId: null });
+      this.$store.dispatch('setIsAdmin', { isAdmin: null });
+      this.$store.dispatch('setAuthenticatedUser', { user: null });
       this.$router.push({ name: 'Login' });
     },
+  },
+  created() {
+    this.$store.dispatch('refreshUserData');
   },
 };
 </script>
 
 <style lang="scss">
 .header {
+  width: 100%;
+  max-width: 760px;
   padding: 5px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+h1 {
+  font-family: 'Lato', sans-serif;
+  font-weight: 900;
 }
 
 .header-logo {
@@ -66,6 +97,8 @@ export default {
   width: 65px;
   height: 65px;
   margin-right: 15px;
+  position: relative;
+  z-index: 2;
 }
 
 .action .profile {
@@ -100,6 +133,11 @@ export default {
   opacity: 1;
   margin-right: 15px;
 }
+
+.active {
+  position: absolute;
+}
+
 .action .menu::before {
   content: '';
   position: absolute;
@@ -146,5 +184,28 @@ export default {
 }
 .action .menu ul li:hover a {
   color: #ff5d94;
+}
+
+@media (max-width: 768px) {
+  .header {
+    width: 95%;
+    max-width: 760px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .logo {
+    margin-top: 0.5rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    margin-top: 0;
+  }
+
+  .action {
+    margin-right: 0;
+  }
 }
 </style>

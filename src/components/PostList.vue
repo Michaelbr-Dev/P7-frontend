@@ -4,6 +4,8 @@
     :key="post._id"
     :post="post"
     @post-deleted="$emit('post-deleted')"
+    @post-updated="$emit('post-updated')"
+    @toggle-like="$emit('toggle-like')"
   />
 </template>
 <script>
@@ -11,7 +13,7 @@ import Post from '@/components/Post.vue';
 
 export default {
   name: 'PostList',
-
+  emits: ['post-deleted', 'post-updated', 'toggle-like'],
   components: {
     Post,
   },
