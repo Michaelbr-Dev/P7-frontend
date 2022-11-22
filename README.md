@@ -42,6 +42,8 @@ npm install
 npm run serve
 ```
 
+The server should run on localhost with default port 8080.
+
 ### Compiles and minifies for production
 
 ```sh
