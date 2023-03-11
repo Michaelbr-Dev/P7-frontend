@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "core-js": "^3.25.5",
-    "validator": "^13.7.0",
+    "validator": "^13.9.0",
     "vue": "^3.2.40",
     "vue-router": "^4.1.5",
     "vuex": "^4.1.0"
